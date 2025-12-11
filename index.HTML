@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>تحقق من كود التفعيل</title>
+  <style>
+    body { font-family: Arial; text-align: center; padding: 50px; background: #f0f0f0; }
+    input { padding: 10px; font-size: 16px; width: 250px; }
+    button { padding: 10px 20px; font-size: 16px; margin-left: 10px; }
+    #result { margin-top: 20px; font-size: 20px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>تحقق من كود التفعيل</h1>
+  <input type="text" id="licenseCode" placeholder="ادخل كود التفعيل">
+  <button onclick="checkLicense()">تحقق</button>
+  <div id="result"></div>
+
+  <script>
+    const apiURL = "https://script.google.com/macros/s/AKfycbw1ZXMrxdkT4TDUmuJI6oh97mnjxHhfg5ayAMiIk2et36_8bcJJQA3AZOlJrD14Os4Z/exec";
+
+    function checkLicense() {
+      const code = document.getElementById("licenseCode").value.trim();
+      if (!code) {
+        document.getElementById("result").textContent = "من فضلك ادخل الكود";
+        return;
+      }
+
+      fetch(`${apiURL}?code=${encodeURIComponent(code)}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.valid) {
+            document.getElementById("result").textContent = "الكود صالح ✅";
+            document.getElementById("result").style.color = "green";
+          } else {
+            document.getElementById("result").textContent = "الكود غير صالح ❌";
+            document.getElementById("result").style.color = "red";
+          }
+        })
+        .catch(err => {
+          document.getElementById("result").textContent = "حدث خطأ في التحقق";
+          document.getElementById("result").style.color = "orange";
+          console.error(err);
+        });
+    }
+  </script>
+</body>
+</html>
